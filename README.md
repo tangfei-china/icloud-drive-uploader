@@ -27,6 +27,15 @@ uv install
 ### 2. Setup Authentication
 
 **Method 1: Environment Variables (Recommended)**
+
+**Option A: Create .env file**
+```bash
+# Create .env file in project root
+cp .env.example .env
+# Edit .env file with your credentials
+```
+
+**Option B: Export environment variables**
 ```bash
 # macOS/Linux
 export APPLE_ID="your_apple_id@example.com"
@@ -142,7 +151,8 @@ icloud-drive-uploader/
 ├── CLAUDE.md        # Developer guide
 ├── README.md        # Usage documentation (this file)
 ├── pyproject.toml   # Project configuration
-└── uv.lock         # Dependency lock file
+├── uv.lock         # Dependency lock file
+└── .env.example     # Environment variables template
 ```
 
 ## Security Notes
@@ -154,6 +164,13 @@ icloud-drive-uploader/
 - ⚠️ Regularly update Apple passwords
 
 ## Changelog
+
+### v1.0.1
+- ✨ Added python-dotenv dependency for .env file support
+- ✨ Enhanced environment variable loading from .env files
+- 📝 Updated Python version requirement to 3.11 for better compatibility
+- 📝 Added .env.example file for reference
+- 📝 Updated documentation with .env file setup instructions
 
 ### v1.0.0
 - ✨ Initial release
