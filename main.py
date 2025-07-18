@@ -161,7 +161,7 @@ def list_local_folder_contents(folder_path):
             print(f"  📁 {item.name}/ ({len(sub_items)} 项目)")
 
 
-print("=== iCloud Drive 文件夹上传工具 ===")
+print("=== iCloud Drive Uploader ===")
 print("注意：iCloud Drive API可能因账户类型、地区或服务配置而不可用")
 
 # 从环境变量获取凭据，如果为空则提示输入

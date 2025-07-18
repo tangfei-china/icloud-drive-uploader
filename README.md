@@ -1,4 +1,4 @@
-# iCloud Drive Folder Upload Tool
+# iCloud Drive Uploader
 
 A powerful Python tool for recursively uploading local folders to iCloud Drive with secure authentication and progress tracking.
 
@@ -137,7 +137,7 @@ The program includes detailed logging that shows:
 ## Project Structure
 
 ```
-iCloudTest/
+icloud-drive-uploader/
 ├── main.py          # Main program file
 ├── CLAUDE.md        # Developer guide
 ├── README.md        # Usage documentation (this file)
