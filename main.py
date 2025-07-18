@@ -2,6 +2,7 @@ from pyicloud import PyiCloudService
 import os
 import mimetypes
 from pathlib import Path
+from dotenv import load_dotenv
 
 
 def upload_folder_to_icloud(api, local_folder_path, remote_folder_name=None):
@@ -166,6 +167,9 @@ print("注意：iCloud Drive API可能因账户类型、地区或服务配置而
 
 # 从环境变量获取凭据，如果为空则提示输入
 print("\n正在获取登录凭据...")
+
+# 加载 .env 文件（如果存在）
+load_dotenv()
 
 # 尝试从环境变量获取凭据
 apple_id = os.getenv('APPLE_ID')
