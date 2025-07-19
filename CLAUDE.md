@@ -52,13 +52,19 @@ APPLE_PASSWORD=your_password
 ### Core Functionality
 1. **iCloud Drive Access**: Connect to and browse iCloud Drive contents
 2. **Folder Upload**: Recursively upload entire folder structures to iCloud Drive
-3. **Interactive Menu**: User-friendly command-line interface for file operations
+3. **Non-Interactive Mode**: Automated uploading with pre-configured paths via environment variables
 
 ### Upload Features
 - **Recursive Upload**: Automatically handles nested folders and files
 - **Progress Tracking**: Shows upload status with file counts and sizes
 - **Error Handling**: Graceful handling of duplicates, file size limits, and permissions
 - **Smart Resumption**: Continues uploading to existing folders without conflict
+- **API Sync Fix**: Advanced connection refresh strategy to handle iCloud API caching issues
+
+### Advanced Features
+- **Connection Refresh**: Automatically creates new API connections when folder access fails due to caching
+- **Multiple Retry Strategies**: Uses both immediate access and reconnection fallback methods
+- **Backup Upload Strategy**: Falls back to flattened file naming when folder creation completely fails
 
 ## Code Structure
 

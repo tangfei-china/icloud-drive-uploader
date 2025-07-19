@@ -1,15 +1,17 @@
 # iCloud Drive Uploader
 
-A powerful Python tool for recursively uploading local folders to iCloud Drive with secure authentication and progress tracking.
+A robust Python automation tool for recursively uploading local folders to iCloud Drive with advanced API synchronization handling and intelligent retry mechanisms.
 
-## Features
+## ✨ Key Features
 
-- **Recursive Folder Upload** - Upload entire folder structures including subfolders
-- **Secure Authentication** - Environment variables or secure interactive password input
-- **Progress Tracking** - Real-time upload progress with file counts and sizes
-- **Smart Error Handling** - Handle duplicates, file size limits, and permissions
-- **Interactive Interface** - User-friendly command-line menu system
-- **China Mainland Support** - Automatic configuration for China iCloud servers
+- **🔄 Non-Interactive Automation** - Fully automated uploads with pre-configured settings
+- **📁 Recursive Folder Upload** - Complete folder structure preservation including nested folders
+- **🛠️ Advanced API Handling** - Intelligent reconnection strategy to solve iCloud API caching issues
+- **⚡ Smart Retry Logic** - Multiple fallback strategies ensure maximum upload success rate
+- **🔐 Secure Authentication** - Environment variable configuration with .env file support
+- **📊 Detailed Progress Tracking** - Real-time upload status with comprehensive statistics
+- **🌏 China Mainland Support** - Optimized for China iCloud infrastructure
+- **⚖️ Conflict Resolution** - Multiple modes: skip, overwrite, or ask for each file
 
 ## System Requirements
 
@@ -21,33 +23,45 @@ A powerful Python tool for recursively uploading local folders to iCloud Drive w
 
 ### 1. Install Dependencies
 ```bash
-uv install
+uv sync
 ```
 
-### 2. Setup Authentication
+### 2. Configuration Setup
 
-**Method 1: Environment Variables (Recommended)**
-
-**Option A: Create .env file**
+**Create .env file** (Recommended for automatic uploads)
 ```bash
 # Create .env file in project root
-cp .env.example .env
-# Edit .env file with your credentials
+touch .env
 ```
 
-**Option B: Export environment variables**
+**Edit .env file with your configuration:**
+```env
+# Apple ID credentials
+APPLE_ID=your_apple_id@example.com
+APPLE_PASSWORD=your_password
+
+# Upload configuration
+LOCAL_FOLDER_PATH=/path/to/your/local/folder
+REMOTE_FOLDER_NAME=DestinationFolder
+CONFLICT_MODE=overwrite
+```
+
+**Alternative: Environment Variables**
 ```bash
 # macOS/Linux
 export APPLE_ID="your_apple_id@example.com"
 export APPLE_PASSWORD="your_password"
+export LOCAL_FOLDER_PATH="/path/to/your/folder"
+export REMOTE_FOLDER_NAME="DestinationFolder"
+export CONFLICT_MODE="overwrite"
 
 # Windows
 set APPLE_ID=your_apple_id@example.com
 set APPLE_PASSWORD=your_password
+set LOCAL_FOLDER_PATH=C:\path\to\your\folder
+set REMOTE_FOLDER_NAME=DestinationFolder
+set CONFLICT_MODE=overwrite
 ```
-
-**Method 2: Interactive Input**
-If environment variables are not set, the program will securely prompt for credentials.
 
 ### 3. Run the Program
 ```bash
@@ -56,103 +70,155 @@ uv run python main.py
 
 ## Usage Guide
 
-### Main Menu Options
+### Automated Upload Mode
 
-After startup, you'll see these options:
+Once configured, the program runs automatically:
 
-```
-Please select an operation:
-1. Upload local folder to iCloud Drive
-2. View local folder contents
-3. View current iCloud Drive contents
-4. Exit
+```bash
+uv run python main.py
 ```
 
-### Upload Folders
-
-1. Select option `1`
-2. Enter the full path to your local folder
-3. Enter remote folder name (optional, leave blank to use local folder name)
-4. Wait for upload completion and view statistics
-
-**Example:**
+**Output Example:**
 ```
-Enter local folder path: /Users/username/Documents/MyProject
-Enter remote folder name (leave blank to use local folder name): ProjectBackup
+=== iCloud Drive Uploader (自动模式) ===
+
+配置信息:
+  Apple ID: your_apple_id@example.com
+  本地文件夹: /Users/username/Documents/MyProject
+  远程文件夹名: ProjectBackup
+  冲突处理模式: overwrite
+
+正在登录iCloud...
+✓ 登录成功！
+
+=== 开始上传文件夹 'MyProject' 到iCloud Drive ===
+
+正在处理文件夹: MyProject (包含 15 个项目)
+  创建子文件夹: src
+  ✓ 文件夹立即访问成功: src
+  上传文件: src/main.py (0.05 MB)
+  ✓ 上传成功: src/main.py
+
+📊 上传统计:
+  ✓ 成功: 15 个文件
+  ✗ 失败: 0 个文件
+
+🎉 文件夹上传完成！
 ```
 
-### Upload Features
+### Advanced Upload Features
 
-- **Auto-create folder structure** - Recreates complete folder hierarchy in iCloud Drive
-- **Duplicate handling** - Continues uploading to existing folders without overwriting
-- **Large file skip** - Automatically skips files over 100MB
-- **Detailed logging** - Shows upload status and size for each file
-- **Upload statistics** - Displays success/failure counts after completion
+- **🔄 Smart Reconnection** - Automatically handles iCloud API caching issues
+- **📁 Structure Preservation** - Maintains complete folder hierarchy
+- **⚡ Fallback Strategies** - Multiple retry mechanisms for maximum success
+- **🛡️ Conflict Resolution** - Configurable handling of existing files
+- **📊 Real-time Progress** - Detailed status for each file and folder
+- **🔧 Backup Strategy** - Flattened upload when folder creation fails completely
+
+### Conflict Modes
+
+Configure how to handle existing files:
+
+- **`skip`** - Skip existing files (fastest, preserves existing data)
+- **`overwrite`** - Replace existing files (ensures latest version)
+- **`ask`** - Interactive prompt for each conflict (not recommended for automation)
 
 ## Advanced Configuration
 
-### Environment Variables
+### Complete Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `APPLE_ID` | Apple ID email address | No* |
-| `APPLE_PASSWORD` | Apple password | No* |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `APPLE_ID` | Apple ID email address | Yes* | None |
+| `APPLE_PASSWORD` | Apple password | Yes* | None |
+| `LOCAL_FOLDER_PATH` | Path to local folder for upload | Yes | None |
+| `REMOTE_FOLDER_NAME` | Destination folder name in iCloud | No | Local folder name |
+| `CONFLICT_MODE` | File conflict handling mode | No | `skip` |
 
-*If not set, program will prompt for input
+*Required for automated operation
 
-### File Size Limits
+### Technical Specifications
 
-- Maximum single file size: **100MB**
-- Files exceeding limit are automatically skipped and logged
+- **File Size Limit**: 100MB per file (automatically skipped if exceeded)
+- **Folder Depth**: Unlimited nesting supported
+- **API Handling**: Advanced reconnection strategy for folder access issues
+- **Retry Logic**: 3-layer fallback system (immediate → reconnect → traditional retry)
 
-### Supported Operations
+### Advanced Features
 
-- ✅ Create new folders
-- ✅ Upload various file types
-- ✅ Handle nested folder structures
-- ✅ Detect and skip duplicate folders
-- ✅ Display detailed error messages
+- ✅ **Smart Folder Creation** - Handles iCloud API synchronization delays
+- ✅ **Reconnection Strategy** - Creates fresh API connections to bypass caching
+- ✅ **Backup Upload Mode** - Falls back to flattened naming when folders fail
+- ✅ **Progress Statistics** - Real-time success/failure tracking
+- ✅ **China Support** - Optimized for China mainland iCloud infrastructure
 
 ## Troubleshooting
 
 ### Common Issues
 
-**1. "iCloud Drive service not available"**
+**1. "No child named 'FolderName' exists" - API Caching Issue**
+- **Cause**: iCloud API caches folder listings, preventing immediate access to newly created folders
+- **Solution**: The program automatically uses reconnection strategy to bypass this
+- **Manual Fix**: Restart the program if the automatic fix fails
+
+**2. "iCloud Drive service not available"**
 - Ensure iCloud Drive is enabled in Settings > Apple ID > iCloud
-- Check network connection
-- Try restarting the program
+- Check network connection and firewall settings
+- Verify your Apple ID has iCloud Drive access
 
-**2. "Two-factor authentication required"**
-- Enter the verification code received on your other devices
-- Ensure two-factor authentication is enabled for your Apple ID
+**3. "Two-factor authentication required"**
+- Use app-specific passwords instead of your main Apple ID password
+- Generate app passwords at appleid.apple.com → Sign In & Security → App-Specific Passwords
+- Ensure 2FA is properly configured for your Apple ID
 
-**3. "Upload failed" errors**
-- Check file permissions
-- Verify file size doesn't exceed limits
-- Ensure stable network connection
+**4. Configuration errors**
+- Check `.env` file format and syntax
+- Ensure `LOCAL_FOLDER_PATH` points to an existing folder
+- Verify file permissions on the local folder
 
-**4. China mainland connection issues**
-- Program automatically configures `china_mainland=True`
-- If issues persist, check network environment
+**5. Upload partial failures**
+- Files over 100MB are automatically skipped (expected behavior)
+- Check network stability for large uploads
+- Review file permissions and read access
 
-### Debug Mode
+### Advanced Troubleshooting
 
-The program includes detailed logging that shows:
-- Connection status
-- File upload progress
-- Error details
-- Statistics information
+**Enable Verbose Output**
+```bash
+# Add debugging info to your .env file
+DEBUG=true
+```
+
+**Check Specific Components**
+```bash
+# Test iCloud connection only
+uv run python debug_api.py
+
+# Test folder upload only
+uv run python test_upload.py
+```
+
+### Technical Details
+
+The program implements a 3-tier strategy to handle iCloud API limitations:
+
+1. **Immediate Access** - Try accessing folders directly after creation
+2. **Reconnection Strategy** - Create fresh API connection to bypass caching
+3. **Traditional Retry** - Wait and retry with exponential backoff
+4. **Backup Mode** - Upload files with flattened naming as final fallback
 
 ## Project Structure
 
 ```
 icloud-drive-uploader/
-├── main.py          # Main program file
-├── CLAUDE.md        # Developer guide
-├── README.md        # Usage documentation (this file)
-├── pyproject.toml   # Project configuration
+├── main.py          # Main automation program with advanced API handling
+├── debug_api.py     # iCloud API debugging and testing tool
+├── test_upload.py   # Upload functionality testing script
+├── CLAUDE.md        # Developer guide and technical documentation
+├── README.md        # User documentation (this file)
+├── pyproject.toml   # Project configuration and dependencies
 ├── uv.lock         # Dependency lock file
-└── .env.example     # Environment variables template
+└── .env             # Configuration file (user-created)
 ```
 
 ## Security Notes
@@ -164,6 +230,16 @@ icloud-drive-uploader/
 - ⚠️ Regularly update Apple passwords
 
 ## Changelog
+
+### v2.0.0 (Current) - 🚀 Advanced API Handling Release
+- ✨ **Major Feature**: Non-interactive automation mode with .env configuration
+- 🛠️ **API Innovation**: Advanced reconnection strategy to solve iCloud API caching issues
+- ⚡ **Smart Retry Logic**: 3-tier fallback system (immediate → reconnect → traditional retry)
+- 🔧 **Backup Strategy**: Flattened file upload when folder creation completely fails
+- 📊 **Enhanced Progress**: Real-time detailed upload statistics and status tracking
+- ⚖️ **Conflict Resolution**: Configurable modes (skip/overwrite/ask) via environment variables
+- 🔄 **Technical Fix**: Solves "No child named 'FolderName' exists" API synchronization issue
+- 📝 **Complete Documentation**: Updated guides reflecting new automation capabilities
 
 ### v1.0.1
 - ✨ Added python-dotenv dependency for .env file support
